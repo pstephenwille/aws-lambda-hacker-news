@@ -1,4 +1,5 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
+import { initApp } from "./init-app-data";
 
 /**
  *
@@ -10,22 +11,28 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
  *
  */
 
-export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    try {
-        /* populate db */
-        return {
-            statusCode: 200,
-            body: JSON.stringify({
-                message: 'hello world - xxx',
-            }),
-        };
-    } catch (err) {
-        console.log(err);
-        return {
-            statusCode: 500,
-            body: JSON.stringify({
-                message: 'some error happened',
-            }),
-        };
-    }
+export const lambdaHandler = async (
+  event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> => {
+  try {
+    /* populate db */
+    const collections = await initApp.testMongo();
+
+    console.log(collections);
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        message: collections.data,
+      }),
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        message: "some error happened",
+      }),
+    };
+  }
 };
